@@ -11,7 +11,22 @@ public class PlayerController : MonoBehaviour
 
     private PlayerInput _playerInput;
     private InputAction _moveAction;
+
     private SpriteRenderer _sprite;
+
+    private IPlayerState _currentState;
+
+    private Animator _animator;
+
+    [Header("Animator Controllers")]
+    public RuntimeAnimatorController idleController;
+    public RuntimeAnimatorController runController;
+
+    [Header("Properties")]
+    public float MoveSpeed => _moveSpeed;
+    public Rigidbody2D Rigid => _rigid;
+    public Vector2 MoveInput => _moveInput;
+    public Animator Animator => _animator;
 
     private void Awake()
     {
@@ -21,6 +36,13 @@ public class PlayerController : MonoBehaviour
         _moveAction = _playerInput.actions["Move"];
 
         _sprite = GetComponent<SpriteRenderer>();
+
+        _animator = GetComponent<Animator>();
+    }
+
+    private void Start()
+    {
+        SetState(new PlayerIdleState(this));
     }
 
     private void OnEnable()
@@ -35,16 +57,9 @@ public class PlayerController : MonoBehaviour
         _moveAction.canceled -= OnMoveCanceled;
     }
 
-    private void OnMovePerformed(InputAction.CallbackContext ctx)
+    private void Update()
     {
-        //Axis값 (-1 ~ +1)
-        float value = ctx.ReadValue<float>();
-        _moveInput = new Vector2(value, 0);
-    }
-
-    private void OnMoveCanceled(InputAction.CallbackContext ctx)
-    {
-        _moveInput = Vector2.zero;
+        _currentState.Update();
     }
 
     private void FixedUpdate()
@@ -64,4 +79,24 @@ public class PlayerController : MonoBehaviour
         velocity.x = _moveInput.x * _moveSpeed;
         _rigid.linearVelocity = velocity;
     }
+
+    private void OnMovePerformed(InputAction.CallbackContext ctx)
+    {
+        //Axis값 (-1 ~ +1)
+        float value = ctx.ReadValue<float>();
+        _moveInput = new Vector2(value, 0);
+    }
+
+    private void OnMoveCanceled(InputAction.CallbackContext ctx)
+    {
+        _moveInput = Vector2.zero;
+    }
+
+    //상태처리
+    public void SetState(IPlayerState newState)
+    {
+        _currentState?.Exit();
+        _currentState = newState;
+        _currentState.Enter();
+    }    
 }
