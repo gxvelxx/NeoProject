@@ -26,4 +26,22 @@ public class PlayerRunState : IPlayerState
             _player.SetState(new PlayerIdleState(_player));
         }
     }
+
+    public void FixedUpdate()
+    {
+        //시선처리
+        if (_player.MoveInput.x > 0)
+        {
+            _player.Animator.GetComponent<SpriteRenderer>().flipX = false;            
+        }
+        else if (_player.MoveInput.x < 0)
+        {
+            _player.Animator.GetComponent<SpriteRenderer>().flipX = true;
+        }
+
+        //이동
+        Vector2 velocity = _player.Rigid.linearVelocity;
+        velocity.x = _player.MoveInput.x * _player.MoveSpeed;
+        _player.Rigid.linearVelocity = velocity;
+    }
 }

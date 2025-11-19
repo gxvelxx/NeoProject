@@ -17,7 +17,7 @@ public class PlayerIdleState : IPlayerState
     public void Exit()
     {
         
-    }
+    }    
 
     public void Update()
     {
@@ -25,5 +25,13 @@ public class PlayerIdleState : IPlayerState
         {
             _player.SetState(new PlayerRunState(_player));
         }
+    }
+
+    public void FixedUpdate()
+    {
+        //이동없게
+        Vector2 velocity = _player.Rigid.linearVelocity;
+        velocity.x = 0;
+        _player.Rigid.linearVelocity = velocity;
     }
 }

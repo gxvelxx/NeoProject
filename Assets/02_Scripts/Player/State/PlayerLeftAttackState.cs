@@ -74,4 +74,9 @@ public class PlayerLeftAttackState : IPlayerState
             _player.SetState(new PlayerIdleState(_player));
         }
     }
+
+    public void FixedUpdate()
+    {
+        
+    }
 }

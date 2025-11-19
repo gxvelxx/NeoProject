@@ -79,18 +79,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!(_currentState is PlayerLeftAttackState) &&
-            !(_currentState is PlayerRightAttackState))
-        {
-            //시선처리
-            if (_moveInput.x > 0) _sprite.flipX = false;
-            else if (_moveInput.x < 0) _sprite.flipX = true;
-
-            //이동
-            Vector2 velocity = _rigid.linearVelocity;
-            velocity.x = _moveInput.x * _moveSpeed;
-            _rigid.linearVelocity = velocity;
-        }
+        _currentState.FixedUpdate();
     }
 
     private void OnMovePerformed(InputAction.CallbackContext ctx)
