@@ -9,8 +9,9 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _rigid;
     private Vector2 _moveInput;
 
+    [Header("Input Action")]
     private PlayerInput _playerInput;
-    private InputAction _moveAction;
+    private InputAction _moveAction;   
 
     private SpriteRenderer _sprite;
 
@@ -21,6 +22,10 @@ public class PlayerController : MonoBehaviour
     [Header("Animator Controllers")]
     public RuntimeAnimatorController idleController;
     public RuntimeAnimatorController runController;
+    public RuntimeAnimatorController ComboAController;
+    public RuntimeAnimatorController ComboBController;
+    public RuntimeAnimatorController ComboCController;
+    public RuntimeAnimatorController ComboDController;
 
     [Header("Properties")]
     public float MoveSpeed => _moveSpeed;
