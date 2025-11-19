@@ -11,7 +11,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Input Action")]
     private PlayerInput _playerInput;
-    private InputAction _moveAction;   
+    private InputAction _moveAction;
+    private InputAction _leftAttackAction;
 
     private SpriteRenderer _sprite;
 
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
         _playerInput = GetComponent<PlayerInput>();
 
         _moveAction = _playerInput.actions["Move"];
+        _leftAttackAction = _playerInput.actions["LeftAttack"];
 
         _sprite = GetComponent<SpriteRenderer>();
 
@@ -54,12 +56,16 @@ public class PlayerController : MonoBehaviour
     {
         _moveAction.performed += OnMovePerformed;
         _moveAction.canceled += OnMoveCanceled;
+
+        _leftAttackAction.performed += OnLeftAttack;
     }
 
     private void OnDisable()
     {
         _moveAction.performed -= OnMovePerformed;
         _moveAction.canceled -= OnMoveCanceled;
+
+        _leftAttackAction.performed -= OnLeftAttack;
     }
 
     private void Update()
@@ -69,20 +75,17 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //시선처리
-        if (_moveInput.x > 0)
+        if (!(_currentState is PlayerLeftAttack))
         {
-            _sprite.flipX = false;
-        }
-        else if (_moveInput.x < 0)
-        {
-            _sprite.flipX = true;
-        }
+            //시선처리
+            if (_moveInput.x > 0) _sprite.flipX = false;
+            else if (_moveInput.x < 0) _sprite.flipX = true;
 
-        //이동
-        Vector2 velocity = _rigid.linearVelocity;
-        velocity.x = _moveInput.x * _moveSpeed;
-        _rigid.linearVelocity = velocity;
+            //이동
+            Vector2 velocity = _rigid.linearVelocity;
+            velocity.x = _moveInput.x * _moveSpeed;
+            _rigid.linearVelocity = velocity;
+        }
     }
 
     private void OnMovePerformed(InputAction.CallbackContext ctx)
@@ -95,6 +98,12 @@ public class PlayerController : MonoBehaviour
     private void OnMoveCanceled(InputAction.CallbackContext ctx)
     {
         _moveInput = Vector2.zero;
+    }
+
+    //공격
+    private void OnLeftAttack(InputAction.CallbackContext ctx)
+    {
+        SetState(new PlayerLeftAttack(this));
     }
 
     //상태처리
