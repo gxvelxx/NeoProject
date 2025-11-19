@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private PlayerInput _playerInput;
     private InputAction _moveAction;
     private InputAction _leftAttackAction;
+    private InputAction _rightAttackAction;
 
     private SpriteRenderer _sprite;
 
@@ -41,6 +42,7 @@ public class PlayerController : MonoBehaviour
 
         _moveAction = _playerInput.actions["Move"];
         _leftAttackAction = _playerInput.actions["LeftAttack"];
+        _rightAttackAction = _playerInput.actions["RightAttack"];
 
         _sprite = GetComponent<SpriteRenderer>();
 
@@ -58,6 +60,7 @@ public class PlayerController : MonoBehaviour
         _moveAction.canceled += OnMoveCanceled;
 
         _leftAttackAction.performed += OnLeftAttack;
+        _rightAttackAction.performed += OnRightAttack;
     }
 
     private void OnDisable()
@@ -66,6 +69,7 @@ public class PlayerController : MonoBehaviour
         _moveAction.canceled -= OnMoveCanceled;
 
         _leftAttackAction.performed -= OnLeftAttack;
+        _rightAttackAction.performed -= OnRightAttack;
     }
 
     private void Update()
@@ -75,7 +79,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!(_currentState is PlayerLeftAttack))
+        if (!(_currentState is PlayerLeftAttackState) &&
+            !(_currentState is PlayerRightAttackState))
         {
             //시선처리
             if (_moveInput.x > 0) _sprite.flipX = false;
@@ -103,7 +108,29 @@ public class PlayerController : MonoBehaviour
     //공격
     private void OnLeftAttack(InputAction.CallbackContext ctx)
     {
-        SetState(new PlayerLeftAttack(this));
+        //키입력 가져오기
+        string key = ctx.control.displayName;
+        //입력체크
+        if (string.IsNullOrEmpty(key))
+        {
+            return;
+        }
+        char pressedKey = key[0]; // S,D,F
+
+        SetState(new PlayerLeftAttackState(this, pressedKey));
+    }
+    private void OnRightAttack(InputAction.CallbackContext ctx)
+    {
+        //키입력 가져오기
+        string key = ctx.control.displayName;
+        //입력체크
+        if (string.IsNullOrEmpty(key))
+        {
+            return;
+        }
+        char pressedKey = key[0]; // J,K,L
+
+        SetState(new PlayerRightAttackState(this, pressedKey));
     }
 
     //상태처리
