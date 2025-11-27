@@ -30,6 +30,8 @@ public class EnemyAttackState : IEnemyState
 
     public void Update()
     {
+        _enemy.LookPlayer();
+
         AnimatorStateInfo state = _enemy.Animator.GetCurrentAnimatorStateInfo(0);
         
         if (state.IsName("Punch") && state.normalizedTime < 1f)

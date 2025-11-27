@@ -22,7 +22,9 @@ public class EnemyChaseState : IEnemyState
     {
         if (_enemy.Player == null)
             return;
-        
+
+        _enemy.LookPlayer();
+
         //공격범위 안이면 공격상태로
         float distance = Vector2.Distance(_enemy.transform.position, _enemy.Player.position);
         if (distance <= _enemy.AttackRange)
