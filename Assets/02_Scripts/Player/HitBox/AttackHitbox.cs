@@ -34,7 +34,10 @@ public class AttackHitbox : MonoBehaviour
         if (_hitCollider == null)
             _hitCollider= GetComponent<Collider2D>();
         if (_hitCollider != null)
+        {
             _hitCollider.isTrigger = true;
+            _hitCollider.enabled = false;
+        }
     }
     
     public void EnableHitbox()
@@ -111,5 +114,10 @@ public class AttackHitbox : MonoBehaviour
 
             HitStopManager.Instance?.PlayHitStop(0.06f);
         }
+    }
+
+    public void SetDamage(int damage)
+    {
+        _damage = damage;
     }
 }

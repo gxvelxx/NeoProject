@@ -728,6 +728,7 @@ MonoBehaviour:
   ComboBController: {fileID: 9100000, guid: 0ed35ecff82df3f40a5077ce0b881570, type: 2}
   ComboCController: {fileID: 9100000, guid: 32583c164d62d834e8982260a870cf66, type: 2}
   ComboDController: {fileID: 9100000, guid: 965c1b3df91fb1e459fd95c0fd0d2983, type: 2}
+  DieController: {fileID: 9100000, guid: e3c3c9bdb09355848acc061a28829a4b, type: 2}
 --- !u!70 &586966562
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1170,7 +1171,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1928911284}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}

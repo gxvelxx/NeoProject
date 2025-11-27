@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
     [Header("Player Setting")]
     [SerializeField] private float _moveSpeed = 5f;
 
+    private PlayerModel _model;
+
     private Rigidbody2D _rigid;
     private Vector2 _moveInput;
 
@@ -30,12 +32,14 @@ public class PlayerController : MonoBehaviour
     public RuntimeAnimatorController ComboBController;
     public RuntimeAnimatorController ComboCController;
     public RuntimeAnimatorController ComboDController;
+    public RuntimeAnimatorController DieController;
 
     [Header("Properties")]
     public float MoveSpeed => _moveSpeed;
     public Rigidbody2D Rigid => _rigid;
     public Vector2 MoveInput => _moveInput;
     public Animator Animator => _animator;
+    public PlayerModel Model => _model;
 
     private void Awake()
     {
@@ -51,6 +55,10 @@ public class PlayerController : MonoBehaviour
         _animator = GetComponent<Animator>();
 
         _attackHitbox = GetComponentInChildren<AttackHitbox>();
+
+        _model = new PlayerModel();
+        _model.Initialize();
+        _model.OnDie += OnPlayerDie;
     }
 
     private void Start()
@@ -130,6 +138,8 @@ public class PlayerController : MonoBehaviour
     public void SetState(IPlayerState newState)
     {
         _currentState?.Exit();
+
+        EndAttackHit();
         _currentState = newState;
         _currentState.Enter();
     }
@@ -148,11 +158,20 @@ public class PlayerController : MonoBehaviour
         bool facingRight = transform.localScale.x > 0f;
         _attackHitbox.SetDirection(facingRight);
 
+        _attackHitbox.SetDamage(_model.GetDamage());
+
         _attackHitbox.EnableHitbox();
     }
     public void EndAttackHit()
     {
         if (_attackHitbox == null) return;
         _attackHitbox.DisableHitbox();
+    }
+
+    //사망처리
+    private void OnPlayerDie()
+    {
+        Debug.Log("플레이어 사망!");
+        SetState(new PlayerDieState(this));
     }
 }
