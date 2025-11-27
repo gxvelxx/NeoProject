@@ -13,15 +13,19 @@ public class EnemyController : MonoBehaviour
 
     private Transform _player;
 
+    private Animator _animator;
+
     [Header("Properties")]
     public float MoveSpeed => _moveSpeed;
     public float AttackRange => _attackRagne;
     public Rigidbody2D Rigid => _rigid;
     public Transform Player => _player;
+    public Animator Animator => _animator;
 
     private void Awake()
     {
         _rigid = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
     }
 
     void Start()
@@ -32,7 +36,6 @@ public class EnemyController : MonoBehaviour
 
         SetState(new EnemyChaseState(this));
     }
-
     
     void Update()
     {
@@ -49,5 +52,10 @@ public class EnemyController : MonoBehaviour
         _currentState?.Exit();
         _currentState = newState;
         _currentState.Enter();
+    }
+
+    public void OnAttackHit()
+    {
+        Debug.Log("실제 공격 판전 발생");
     }
 }

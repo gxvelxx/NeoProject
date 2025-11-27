@@ -9,13 +9,13 @@ public class EnemyChaseState : IEnemyState
     }
 
     public void Enter()
-    {
-        
+    {        
+        _enemy.Animator.SetBool("isRunning", true);        
     }
 
     public void Exit()
     {
-        
+        _enemy.Animator.SetBool("isRunning", false);
     }
 
     public void Update()
