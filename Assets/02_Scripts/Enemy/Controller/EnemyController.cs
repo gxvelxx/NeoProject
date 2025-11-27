@@ -75,7 +75,12 @@ public class EnemyController : MonoBehaviour
         Debug.Log($"{gameObject.name} {damage} damage. HP: {_hp}");
 
         if (_hp <= 0)
-            Die();
+        {
+            SetState(new EnemyDieState(this)); // 죽는모션
+            return;
+        }
+
+        SetState(new EnemyHitState(this)); // 피격모션
     }  
 
     public void Die()

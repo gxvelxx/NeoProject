@@ -1223,7 +1223,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackHitbox
   _hitCollider: {fileID: 1928911286}
   _damage: 1
-  _knockbackForce: 100
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
