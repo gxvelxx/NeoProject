@@ -1,20 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class HitboxData
-{
-    public Vector2 offset; // 콜라이더 위치
-    public Vector2 size;   // 콜라이더 크기
-}
-
 [RequireComponent(typeof(Collider2D))]
 public class AttackHitbox : MonoBehaviour
 {    
     public Collider2D _hitCollider;
-
-    [Header("Hitbox Data")]
-    private HitboxData[] comboData;
 
     public int _damage = 1;
 
@@ -32,11 +22,15 @@ public class AttackHitbox : MonoBehaviour
     private void Awake()
     {
         if (_hitCollider == null)
-            _hitCollider= GetComponent<Collider2D>();
+            _hitCollider = GetComponent<Collider2D>();
+
         if (_hitCollider != null)
+        {
             _hitCollider.isTrigger = true;
+            _hitCollider.enabled = false;   
+        }
     }
-    
+
     public void EnableHitbox()
     {
         _alreadyHitIds.Clear();
@@ -61,16 +55,16 @@ public class AttackHitbox : MonoBehaviour
     public void SetComboStep(int step)
     {
         BoxCollider2D box = _hitCollider as BoxCollider2D;
-
-        if (box == null || comboData == null || comboData.Length == 0)
+        if (box == null)
             return;
 
-        //범위 초과 방지
-        step = Mathf.Clamp(step, 0, comboData.Length - 1);
-
-        //데이터 적용
-        box.offset = comboData[step].offset;
-        box.size = comboData[step].size;
+        switch (step)
+        {
+            default:
+                box.offset = new Vector2(0.6f, 0.0f);
+                box.size = new Vector2(0.8f, 0.6f);
+                break;
+        }
     }
     
     //히트박스 플레이어 시선따라
@@ -92,24 +86,24 @@ public class AttackHitbox : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!_active)
-            return;        
+            return;
 
         Debug.Log($"충돌생김: {collision.gameObject.name}");
 
-        //중복 안되게
+        // Enemy만 공격하도록 제한 (아주 중요)
+        EnemyController enemy = collision.GetComponent<EnemyController>();
+        if (enemy == null)
+            return; // 플레이어 등 다른 충돌 무시
+
         int id = collision.GetInstanceID();
         if (_alreadyHitIds.Contains(id))
             return;
 
-        EnemyController enemy = collision.GetComponent<EnemyController>();
-        if (enemy != null)
-        {
-            Debug.Log("적 맞음!");
-            _alreadyHitIds.Add(id);
-           
-            enemy.TakeDamage(_damage);
+        Debug.Log("적 맞음!");
+        _alreadyHitIds.Add(id);
 
-            HitStopManager.Instance?.PlayHitStop(0.06f);
-        }
+        enemy.TakeDamage(_damage);
+
+        HitStopManager.Instance?.PlayHitStop(0.06f);
     }
 }

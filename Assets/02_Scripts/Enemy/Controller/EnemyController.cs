@@ -9,6 +9,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private int _maxHp = 3;
     private int _hp;
 
+    private bool isDead = false;
+
     private Rigidbody2D _rigid;
 
     private IEnemyState _currentState;
@@ -70,12 +72,16 @@ public class EnemyController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (isDead) return;
+        if (damage <= 0) return;
+
         Debug.Log("실제 공격 판전 발생");
         _hp -= damage;
         Debug.Log($"{gameObject.name} {damage} damage. HP: {_hp}");
 
         if (_hp <= 0)
         {
+            isDead = true;
             SetState(new EnemyDieState(this)); // 죽는모션
             return;
         }
@@ -98,6 +104,7 @@ public class EnemyController : MonoBehaviour
     //적 기본세팅
     private void ResetEnemy()
     {
+        isDead = false;
         _hp = _maxHp;
         _rigid.linearVelocity = Vector2.zero;
 
