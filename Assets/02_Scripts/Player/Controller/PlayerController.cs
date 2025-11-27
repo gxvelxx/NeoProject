@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
 
     private Animator _animator;
 
+    private AttackHitbox _attackHitbox;
+
     [Header("Animator Controllers")]
     public RuntimeAnimatorController idleController;
     public RuntimeAnimatorController runController;
@@ -47,6 +49,8 @@ public class PlayerController : MonoBehaviour
         _sprite = GetComponent<SpriteRenderer>();
 
         _animator = GetComponent<Animator>();
+
+        _attackHitbox = GetComponentInChildren<AttackHitbox>();
     }
 
     private void Start()
@@ -128,5 +132,27 @@ public class PlayerController : MonoBehaviour
         _currentState?.Exit();
         _currentState = newState;
         _currentState.Enter();
-    }    
+    }
+
+    //애니 이벤트
+    public void StartAttackHit()
+    {
+        if (_attackHitbox == null)
+        {
+            _attackHitbox = GetComponentInChildren<AttackHitbox>();
+            if (_attackHitbox == null)
+                return;
+        }
+
+        // 플레이어 방향 전달
+        bool facingRight = transform.localScale.x > 0f;
+        _attackHitbox.SetDirection(facingRight);
+
+        _attackHitbox.EnableHitbox();
+    }
+    public void EndAttackHit()
+    {
+        if (_attackHitbox == null) return;
+        _attackHitbox.DisableHitbox();
+    }
 }

@@ -6,7 +6,8 @@ public class EnemyController : MonoBehaviour
     [Header("Enemy Setting")]
     [SerializeField] private float _moveSpeed = 3f;
     [SerializeField] private float _attackRagne = 1f;
-    [SerializeField] private int _hp = 10;
+    [SerializeField] private int _maxHp = 3;
+    private int _hp;
 
     private Rigidbody2D _rigid;
 
@@ -67,20 +68,32 @@ public class EnemyController : MonoBehaviour
         _currentState.Enter();
     }
 
-    public void OnAttackHit()
+    public void TakeDamage(int damage)
     {
         Debug.Log("실제 공격 판전 발생");
-    }    
+        _hp -= damage;
+        Debug.Log($"{gameObject.name} {damage} damage. HP: {_hp}");
+
+        if (_hp <= 0)
+            Die();
+    }  
 
     public void Die()
     {
-        _pool.Release(this.gameObject);
+        if (_pool != null)
+        {
+            _pool.Release(this.gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     //적 기본세팅
     private void ResetEnemy()
     {
-        _hp = 10;
+        _hp = _maxHp;
         _rigid.linearVelocity = Vector2.zero;
 
         _animator.Rebind();

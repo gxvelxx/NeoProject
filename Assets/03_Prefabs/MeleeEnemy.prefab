@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7643335415482937350}
   - component: {fileID: 637720530140033520}
   - component: {fileID: 9096372854532183275}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MeleeEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -50,7 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   _moveSpeed: 3
   _attackRagne: 1
-  _hp: 0
+  _maxHp: 3
 --- !u!212 &9164986790375750368
 SpriteRenderer:
   m_ObjectHideFlags: 0
